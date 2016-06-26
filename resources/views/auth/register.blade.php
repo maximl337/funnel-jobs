@@ -66,6 +66,25 @@
                             </div>
                         </div>
 
+                        <div class="form-group{{ $errors->has('role') ? ' has-error' : '' }}">
+                            <label for="role" class="col-md-4 control-label">Role</label>
+
+                            <div class="col-md-6">
+                                <div class="radio">
+                                    @foreach($roles as $role)
+                                        <label class="radio-inline">
+                                            <input type="radio" name="role" value="{{ $role->id }}"> {{ $role->name }}
+                                        </label>
+                                    @endforeach
+                                </div>
+                                @if ($errors->has('role'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('role') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

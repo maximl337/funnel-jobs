@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Role;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -52,6 +53,9 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'role'  => 'required'
+        ], [
+            'role.require' => "Please select a role"
         ]);
     }
 
@@ -63,10 +67,39 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        $role = Role::find($data['role']);
+
+        $user->roles()->save($role);
+
+        if($role->name == "Employer") {
+            $this->redirectTo = '/jobs/create';
+        } elseif($role->name == "Worker") {
+            $this->redirectTo = '/tags';
+        }
+
+        return $user;
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+
+        $roles = Role::whereNotIn("name", ["admin"])->get();
+
+        if (property_exists($this, 'registerView')) {
+            return view($this->registerView, compact('roles'));
+        }
+
+        return view('auth.register', compact('roles'));
     }
 }
