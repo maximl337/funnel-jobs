@@ -16,6 +16,8 @@ class CreateJobUserTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('job_id')->unsigned();
+            $table->decimal('bid_amount', 19, 4);
+            $table->text('bid_message');
             $table->timestamp('accepted_at');
             $table->timestamp('completed_at');
             $table->timestamps();

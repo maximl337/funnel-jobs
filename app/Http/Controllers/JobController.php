@@ -17,6 +17,8 @@ class JobController extends Controller
     	$this->middleware('auth');
 
         $this->middleware('employer', ['only' => ['create', 'store', 'update']]);
+
+        $this->middleware('worker', ['only' => ['bid', 'remove_bid']]);
     }
 
     /**
@@ -30,7 +32,20 @@ class JobController extends Controller
 
         $page = $request->get('page') ?: 0;
 
-        $jobs = Job::with('tags')->with('user')->paginate($limit);
+        $query_string = $request->get('query');
+
+
+        if(!$query_string) {
+
+            $jobs = Job::with('tags')->with('user')->paginate($limit);
+
+        } else {
+
+            $jobs = Job::where("title", "LIKE", "%".$query_string."%")
+                        ->with('tags')
+                        ->with('user')
+                        ->paginate($limit);
+        }
 
         return view('jobs.index', compact('jobs'));
     }
@@ -105,4 +120,53 @@ class JobController extends Controller
 
         return redirect()->action('JobController@show', ['id' => $job->id])->with("success", "Job created successfully");
     }
+
+    /**
+     * Bid on a job
+     * 
+     * @param  Request $request [description]
+     * @param  [type]  $id      [description]
+     * @return [type]           [description]
+     */
+    public function bid(Request $request, $id)
+    {
+        try {
+    
+            $this->validate($request, [
+                    'message' => 'required',
+                    'amount' => 'required|numeric'
+                ]);
+
+            $user = Auth::user();
+
+            if($user->jobBids()->where('job_id', $id)->exists()) {
+                throw new Exception("You have already bid on this job");
+            }
+
+            // get message
+            $message = $request->get('message');
+
+            // get bid amount
+            $bid_amount = $request->get('amount');
+
+            $job = Job::findOrFail($id);
+
+            $user->jobBids()->save($job, ['bid_message' => $message, 'bid_amount' => $bid_amount]);
+
+            Session::flash("success", "Bid created successfully");
+
+        } catch (Exception $e) {
+
+            return redirect()->back()->withErrors(['message' => $e->getMessage()]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function remove_bid(Request $request, $id)
+    {
+        # code...
+    }
+
+
 }

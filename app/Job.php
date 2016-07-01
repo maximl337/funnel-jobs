@@ -28,4 +28,11 @@ class Job extends Model
     {
     	return $this->belongsToMany(Tag::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)
+                    ->withPivot('bid_amount', 'bid_message', 'accepted_at', 'completed_at')
+                    ->withTimestamps();
+    }
 }

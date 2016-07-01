@@ -42,4 +42,23 @@ class User extends Authenticatable
         return $this->hasMany(Job::class);
     }
 
+    public function isWorker()
+    {
+        return $this->roles()->where('name', 'worker')->exists();
+    }
+
+    public function isEmployer()
+    {
+        return $this->roles()->where('name', 'employer')->exists();
+    }
+
+    public function jobBids()
+    {
+        
+        return $this->belongsToMany(Job::class)
+                    ->withPivot('bid_amount', 'bid_message', 'accepted_at', 'completed_at')
+                    ->withTimestamps();
+    
+    }
+
 }
