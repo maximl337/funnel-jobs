@@ -19,6 +19,8 @@ class JobController extends Controller
         $this->middleware('employer', ['only' => ['create', 'store', 'update']]);
 
         $this->middleware('worker', ['only' => ['bid', 'remove_bid']]);
+
+        $this->middleware('job_owner',  ['only' => ['edit', 'update', 'destroy']]);
     }
 
     /**
@@ -34,7 +36,6 @@ class JobController extends Controller
 
         $query_string = $request->get('query');
 
-
         if(!$query_string) {
 
             $jobs = Job::with('tags')->with('user')->paginate($limit);
@@ -48,6 +49,17 @@ class JobController extends Controller
         }
 
         return view('jobs.index', compact('jobs'));
+    }
+
+    public function getMyJobs(Request $request)
+    {
+        $limit = $request->get('limit') ?: 20;
+
+        $page = $request->get('page') ?: 0;
+
+        $jobs = Auth::user()->jobs()->with('tags')->with('user')->paginate($limit);
+
+        return view('jobs.my_jobs', compact('jobs'));
     }
 
     /**
@@ -92,6 +104,10 @@ class JobController extends Controller
     	return view('jobs.show', compact('job'));
     }
 
+    /**
+     * [create description]
+     * @return [type] [description]
+     */
     public function create()
     {
         $tags = Tag::all();
@@ -99,6 +115,11 @@ class JobController extends Controller
         return view('jobs.create', compact('tags'));
     }
 
+    /**
+     * [store description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function store(Request $request)
     {
 
@@ -119,6 +140,60 @@ class JobController extends Controller
         $job->tags()->attach($input['tags']);
 
         return redirect()->action('JobController@show', ['id' => $job->id])->with("success", "Job created successfully");
+    }
+
+    /**
+     * [edit description]
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    public function edit($id)
+    {
+        $job = Job::find($id);
+
+        $tags = Tag::all();
+
+        return view('jobs.edit', compact('job', 'tags'));
+    }
+
+    /**
+     * [update description]
+     * @param  Request $request [description]
+     * @param  [type]  $id      [description]
+     * @return [type]           [description]
+     */
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+                'title' => 'required',
+                'body' => 'required',
+                'tags' => 'required'
+            ],[
+                'tags.required' => 'Please select atleast one tag'
+            ]);
+
+        $input = $request->input();
+
+        $job = Job::find($id);
+
+        $job->update($input);
+
+        $job->tags()->detach();
+
+        $job->tags()->attach($input['tags']);
+
+        return redirect()->action('JobController@show', ['id' => $job->id])->with("success", "Job update successfully");
+    }
+
+    public function destroy($id)
+    {
+        $job = Job::find($id);
+
+        $job->tags()->detach();
+
+        $job->delete();
+
+        return redirect()->action('JobController@index');
     }
 
     /**

@@ -11,8 +11,7 @@
 					Job
 				</div>
 				<div class="panel-body">
-	
-					
+						
 					<div class="row">
 						<div class="col-md-12">
 							@if(count($errors) > 0)
@@ -24,11 +23,9 @@
 							@endif	
 
 							@if(Session::has('success'))
-								
 								<p class="alert alert-success">
 									{{ Session::get('success') }}
 								</p>
-									
 							@endif							
 						</div>
 						<!-- /.col-md-12 -->
@@ -62,6 +59,20 @@
 									<span class="label label-primary">{{ $tag->name }}</span>
 								@endforeach
 							</p>
+							@if($job->user_id == Auth::id())
+								<p>
+									<a class="pull-left btn btn-primary btn-small" href="{{ url('jobs/' . $job->id . '/edit') }}">Edit</a>
+									<form method="POST" action="{{ url('jobs/' . $job->id) }}" role="form">
+
+										{!! csrf_field() !!}
+										{!! method_field('DELETE') !!}
+
+										<input class="btn btn-danger btn-small" type="submit" value="Remove" />
+										
+									</form>
+									
+								</p>
+							@endif
 							<p>
 								{{ $job->body }}
 							</p>

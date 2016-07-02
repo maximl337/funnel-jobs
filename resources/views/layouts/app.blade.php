@@ -53,6 +53,10 @@
                         @if(Auth::user()->isWorker())
                             <li><a href="{{ url('/bids') }}">My Bids</a></li>
                         @endif
+
+                        @if(Auth::user()->isEmployer())
+                            <li><a href="{{ url('/users/jobs') }}">My Jobs</a></li>
+                        @endif
                     @endif
                 </ul>
 

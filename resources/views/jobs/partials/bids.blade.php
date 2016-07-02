@@ -13,8 +13,25 @@
 							<div class="col-md-12">
 								{{ $user->name }}
 								@if($user->id == Auth::id())
-									<a href="#">Edit</a>
-									<a href="#">Remove</a>
+
+									<div class="row">
+										<div class="col-md-12">
+											<a class="btn btn-primary btn-small pull-left" href="{{ url('bids/' . $job->id . '/edit') }}">Edit</a>
+									
+											<form method="POST" action="{{ url('bids/' . $job->id) }}">
+
+												{!! csrf_field() !!}
+												{!! method_field('DELETE') !!}
+												<input type="submit" class="btn btn-danger btn-small" value="Remove">
+												
+											</form>		
+										</div>
+										<!-- /.col-md-12 -->	
+									</div>
+									<!-- /.row -->	
+									
+									
+				
 								@endif
 							</div>
 							<!-- /.col-md-12 -->
