@@ -49,8 +49,10 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/jobs') }}">Jobs</a></li>
-                    @if(Auth::user()->isWorker())
-                        <li><a href="{{ url('/bids') }}">My Bids</a></li>
+                    @if(Auth::check())
+                        @if(Auth::user()->isWorker())
+                            <li><a href="{{ url('/bids') }}">My Bids</a></li>
+                        @endif
                     @endif
                 </ul>
 
