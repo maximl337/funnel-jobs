@@ -8,6 +8,7 @@ use Auth;
 use App\Job;
 use App\Tag;
 use Session;
+use App\Events\NewBidEvent;
 use App\Http\Requests;
 
 class JobController extends Controller
@@ -227,6 +228,13 @@ class JobController extends Controller
             $job = Job::findOrFail($id);
 
             $user->jobBids()->save($job, ['bid_message' => $message, 'bid_amount' => $bid_amount]);
+
+            $data = [
+                    'job' => $job, 
+                    'user'  => Auth::user()
+                ];
+
+            event(new NewBidEvent($data));
 
             Session::flash("success", "Bid created successfully");
 

@@ -18,12 +18,13 @@ class CreateJobUserTable extends Migration
             $table->integer('job_id')->unsigned();
             $table->decimal('bid_amount', 19, 4);
             $table->text('bid_message');
-            $table->timestamp('accepted_at');
-            $table->timestamp('completed_at');
+            $table->dateTime('accepted_at')->nullable();
+            $table->dateTime('completed_at')->nullable();
             $table->timestamps();
         });
 
         Schema::table('job_user', function(Blueprint $table) {
+
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onDelete('cascade');

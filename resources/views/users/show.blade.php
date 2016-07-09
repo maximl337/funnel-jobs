@@ -40,7 +40,9 @@
 								<!-- /.col-md-12 -->
 								
 								<div class="col-md-12">
-									<a href="#" class="btn btn-primary"><i class="fa fa-message"></i> Send Message</a>
+									<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+									 <i class="fa fa-message"></i> Send Message
+									</button>
 
 								</div>
 								<!-- /.col-md-12 -->
@@ -83,4 +85,37 @@
 <!-- /.container -->
 
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Send Message</h4>
+			</div>
+			<div class="modal-body">
+				
+				<form id="send_message" method="POST" action="{{ url('message/send') }}" role="form">
+					
+					{!! csrf_field() !!}
+
+					<input type="hidden" name="recipient_id" value="{{ $user->id }}">
+
+					<div class="form-group">
+						<label for="message">Message</label>
+						<textarea id="message" class="form-control" name="message" rows="10" placeholder="Enter your message"></textarea>
+					</div>
+					
+					<div class="form-group">
+						<input class="form-control btn btn-primary" type="submit" value="Send" />
+					</div>
+				</form>
+				
+			</div>
+			<div class="modal-footer">
+
+			</div>
+		</div>
+	</div>
+</div>
 @endsection

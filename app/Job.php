@@ -35,4 +35,5 @@ class Job extends Model
                     ->withPivot('bid_amount', 'bid_message', 'accepted_at', 'completed_at')
                     ->withTimestamps();
     }
+
 }

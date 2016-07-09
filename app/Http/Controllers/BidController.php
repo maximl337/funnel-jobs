@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Auth;
 use Session;
+use Carbon\Carbon;
 use App\Http\Requests;
 
 class BidController extends Controller
@@ -15,6 +16,8 @@ class BidController extends Controller
     	$this->middleware('auth');
 
         $this->middleware('bidder', ['only' => ['update', 'destroy']]);
+
+        $this->middleware('job_owner',  ['only' => ['accept']]);
 
     }
 
@@ -58,7 +61,7 @@ class BidController extends Controller
 
         $user = Auth::user();
 
-        $bid = $user->jobBids()->updateExistingPivot($id, ['bid_amount' => $input['amount'], 'bid_message' => $input['message']]);
+        $bid = $user->jobBids()->where("job_id", $input['id'])->first()->updateExistingPivot($id, ['bid_amount' => $input['amount'], 'bid_message' => $input['message']]);
 
         Session::flash("success", "Bid updated");
 
@@ -72,6 +75,36 @@ class BidController extends Controller
         $bid = $user->jobBids()->where("job_id", $id)->detach();
 
         Session::flash("success", "Bid removed");
+
+        return redirect()->action('JobController@show', [$id]);
+    }
+
+    public function accept($id, Request $request)
+    {
+
+        $this->validate($request, [
+                'user_id' => 'required'
+            ]);
+
+        $user = Auth::user();
+
+        $job = $user->jobs()->where("id", $id)->first();
+
+        if($job->accepted_at) {
+            Session::flash("error", "This job has already been awarded");
+            return redirect()->back();
+        }
+
+        $bidder = $job->users()->where("user_id", $request->get('user_id'))->first();
+
+        if(!$bidder) {
+            Session::flash("error", "Bidder not found");
+            return redirect()->back();
+        }
+
+        $bidder->jobBids()->updateExistingPivot($id, ['accepted_at' => Carbon::now()]);
+
+        Session::flash('success', 'Bid has been accepted');
 
         return redirect()->action('JobController@show', [$id]);
     }
