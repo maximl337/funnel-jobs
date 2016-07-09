@@ -23,7 +23,8 @@
 						{!! csrf_field() !!}
 						<div class="form-group{{ $errors->has('amount') ? ' has-error' : '' }}">
 							<label for="">Amount</label>
-							<input required class="form-control " type="text" name="amount" value="{{ number_format($bid->pivot->bid_amount, 2) }}" placeholder="Enter Bid amount" />
+							<input required class="form-control " type="number" min="1" name="amount" 
+									value="{{ number_format((float)$bid->pivot->bid_amount, 2, '.', '') }}" placeholder="Enter Bid amount" />
 							@if ($errors->has('amount'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('amount') }}</strong>

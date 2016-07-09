@@ -17,8 +17,24 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->text('body');
-            $table->string('avatar');
+
+            $table->string('title')->nullable();
+            $table->string('street')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('country')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('googleplus')->nullable();
+            $table->string('github')->nullable();
+            $table->string('stackoverflow')->nullable();
+            $table->string('website')->nullable();
+
+            $table->text('body')->nullable();
+            $table->string('avatar')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

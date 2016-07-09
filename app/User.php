@@ -15,6 +15,23 @@ class User extends Authenticatable
         'name', 
         'email', 
         'password',
+
+        'title',
+        'body',
+        'avatar',
+
+        'street',
+        'city',
+        'state',
+        'zip',
+        'country',
+        'facebook',
+        'twitter',
+        'linkedin',
+        'googleplus',
+        'github',
+        'stackoverflow',
+        'website',
     ];
 
     /**
