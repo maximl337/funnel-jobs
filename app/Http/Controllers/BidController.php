@@ -61,7 +61,7 @@ class BidController extends Controller
 
         $user = Auth::user();
 
-        $bid = $user->jobBids()->where("job_id", $input['id'])->first()->updateExistingPivot($id, ['bid_amount' => $input['amount'], 'bid_message' => $input['message']]);
+        $bid = $user->jobBids()->where("job_id", $id)->updateExistingPivot($id, ['bid_amount' => $input['amount'], 'bid_message' => $input['message']]);
 
         Session::flash("success", "Bid updated");
 

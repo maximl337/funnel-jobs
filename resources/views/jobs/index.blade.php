@@ -18,7 +18,7 @@
 								<div class="input-group">
 									<input type="text" class="form-control" name="query" placeholder="Search for Jobs">
 									<span class="input-group-btn">
-										<button class="btn btn-primary" type="button">Go!</button>
+										<button class="btn btn-primary" type="submit">Go!</button>
 									</span>
 								</div>
 							</form>

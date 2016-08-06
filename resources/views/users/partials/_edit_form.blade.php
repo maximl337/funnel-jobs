@@ -1,4 +1,4 @@
-<form id="edit_user" method="POST" action="{{ url('users/'.$user->id) }}" role="form">
+<form id="edit_user" method="POST" action="{{ url('users/'.$user->id) }}" enctype="multipart/form-data" role="form">
 	{!! csrf_field() !!}
 	<fieldset>
 		<legend>Basic info</legend>
@@ -25,6 +25,13 @@
 		<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 			<label for="avatar">Avatar</label>
 			<input id="avatar" class="form-control" type="url" name="avatar" value="{{ $user->avatar }}" placeholder="Profile Picture" />
+
+			OR <br />
+
+			<label class="btn btn-primary btn-file">
+			    Upload a picture <input type="file" name="avatar_file" style="display: none;">
+			</label>
+
 			@if ($errors->has('avatar'))
 	            <span class="help-block">
 	                <strong>{{ $errors->first('avatar') }}</strong>

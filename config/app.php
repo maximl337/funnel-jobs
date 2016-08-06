@@ -156,6 +156,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         * Vendor Service Providers
+         */
+        Redeman\Imgur\ImgurServiceProvider::class,
+
     ],
 
     /*
@@ -201,6 +206,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        /**
+         * Vendor Aliases
+         */
+        'Imgur'     => Redeman\Imgur\Facades\Imgur::class,
 
     ],
 

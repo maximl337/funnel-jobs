@@ -9,6 +9,7 @@ use Session;
 use App\User;
 use App\Tag;
 use App\Http\Requests;
+use App\Services\ImgurService;
 
 class UserController extends Controller
 {
@@ -54,7 +55,8 @@ class UserController extends Controller
     			'name' => 'required',
     			'tags' => 'required',
     			'zip' => 'max:12',
-    			'avatar' => 'url'
+    			'avatar' => 'url',
+                'avatar_file'   => 'image|max:5000',
     		]);
 
     	if(Auth::id() != $id) {
@@ -62,9 +64,18 @@ class UserController extends Controller
     		return redirect()->back();
     	}
 
+
+
     	$user = User::find($id);
 
     	$input = $request->input();
+
+        if(empty($input['avatar'])) {
+
+            if($request->hasFile('avatar_file')) {
+                $input['avatar'] = (new ImgurService)->upload($request->file('avatar_file'));
+            }
+        }
 
     	$user->update($input);
 
