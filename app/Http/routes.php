@@ -2,6 +2,7 @@
 
 Route::auth();
 
+Route::get('/home',  'JobController@index');
 Route::get('/', 'JobController@index');
 
 /**
