@@ -6,3 +6,5 @@ Homestead.json
 .env
 .phpintel
 /.phpintel
+/.phpintel/*
+/mysql

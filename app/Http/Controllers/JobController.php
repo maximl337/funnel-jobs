@@ -216,7 +216,7 @@ class JobController extends Controller
             $user = Auth::user();
 
             if($user->jobBids()->where('job_id', $id)->exists()) {
-                throw new Exception("You have already bid on this job");
+                throw new \Exception("You have already bid on this job");
             }
 
             // get message
